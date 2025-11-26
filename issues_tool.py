@@ -55,7 +55,7 @@ async def IssuesTool(
     """
     # - end_date: Data de fim ISO 8601 (ex: "2025-12-08")
     # - end_date_field_id: ID do campo End date
-    # Passo 1: Criar a issue no repositório
+    # Cria a issue no repositório
     url_issue = f"https://api.github.com/repos/{ORG}/{REPO}/issues"
     headers = {
         "Authorization": f"Bearer {TOKEN}",
@@ -84,7 +84,7 @@ async def IssuesTool(
     print(f"[*] Issue criada: {issue['html_url']}")
     print(f"[i] Número: {issue['number']}")
     
-    # Passo 2: Adicionar a issue ao Project
+    # Adiciona a issue ao Project
     url_graphql = "https://api.github.com/graphql"
     headers_graphql = {
         "Authorization": f"Bearer {TOKEN}",
@@ -123,7 +123,7 @@ async def IssuesTool(
     item_id = res_add.json()["data"]["addProjectV2ItemById"]["item"]["id"]
     print(f"[*] Issue adicionada ao Project")
     
-    # Passo 3: Atualizar campos customizados do Project
+    # Atualiza campos customizados do Project
     mutation_update = """
     mutation UpdateProjectField($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: ProjectV2FieldValue!) {
       updateProjectV2ItemFieldValue(input: {
