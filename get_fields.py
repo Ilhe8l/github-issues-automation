@@ -3,10 +3,6 @@ import json
 from config import TOKEN, PROJECT_ID, REPO_ID
 
 async def get_project_info():
-    """
-    Busca informações do GitHub Project e retorna um JSON estruturado
-    com campos, opções e milestones disponíveis.
-    """
     url = "https://api.github.com/graphql"
     headers = {
         "Authorization": f"Bearer {TOKEN}",
