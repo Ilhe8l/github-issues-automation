@@ -1,5 +1,5 @@
 import google.generativeai as genai
-from agents.config import GEMINI_API_KEY
+from config import GEMINI_API_KEY
 import os
 from dotenv import load_dotenv
 

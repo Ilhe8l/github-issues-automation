@@ -1,6 +1,6 @@
 import requests
 from typing import Optional
-from agents.config import TOKEN, ORG, REPO, PROJECT_ID
+from config import TOKEN, ORG, REPO, PROJECT_ID
 from langchain_core.tools import tool
 
 @tool

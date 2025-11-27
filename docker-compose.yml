@@ -1,0 +1,18 @@
+services:
+  agents:
+    build:
+      context: ./agents
+      dockerfile: Dockerfile
+    container_name: agents_service
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    networks:
+      - agentes-network # troque se necessário
+    environment:
+      PYTHONUNBUFFERED: 1
+
+networks:
+  agentes-network:
+    external: true

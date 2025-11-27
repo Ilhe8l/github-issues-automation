@@ -1,7 +1,7 @@
 #from graph import StateGraph, State
 
-from agents.config import LLM_API_KEY, LLM_MODEL, MAX_CHAT_HISTORY_TOKENS, LLM_PROVIDER
-from agents.stateTypes import State
+from config import LLM_API_KEY, LLM_MODEL, MAX_CHAT_HISTORY_TOKENS, LLM_PROVIDER
+from stateTypes import State
 from langchain_core.messages import trim_messages
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -15,8 +15,8 @@ from langchain_core.messages import (
 )
 import os
 from dotenv import load_dotenv
-from agents.issues_tool import IssuesTool
-from agents.build_prompt import build_prompt
+from issues_tool import IssuesTool
+from build_prompt import build_prompt
 
 load_dotenv()
 

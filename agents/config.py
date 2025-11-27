@@ -25,7 +25,7 @@ PROJECT_ID: str = os.getenv("GITHUB_PROJECT_ID", "")
 REPO_ID: str = os.getenv("GITHUB_REPO_ID", "")
 
 # Redis config
-REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+REDIS_URL: str = os.getenv("REDIS_URL", "redis://redis:6379")
 TTL_TIME: int = int(os.getenv("TTL_TIME", 5))  
 TTL_CONFIG = {
     "default_ttl": TTL_TIME, 

@@ -1,9 +1,9 @@
 import streamlit as st
 import tempfile
 import os
-from agents.send_message import process_message
+from send_message import process_message
 import asyncio
-from agents.transcribe_audio import transcribe_audio_with_speakers
+from transcribe_audio import transcribe_audio_with_speakers
 
 st.set_page_config(
     page_title="Automatização de Issues",

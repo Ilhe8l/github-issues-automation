@@ -1,6 +1,6 @@
 from langchain_core.messages import HumanMessage
-from agents.graph import get_graph
-from agents.stateTypes import State
+from graph import get_graph
+from stateTypes import State
 import asyncio
 
 async def process_message(user_message: str, thread_id: str, user_id: str) -> dict:
