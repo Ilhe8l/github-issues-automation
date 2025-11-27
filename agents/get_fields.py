@@ -1,6 +1,6 @@
 import requests
 import json
-from config import TOKEN, PROJECT_ID, REPO_ID
+from agents.config import TOKEN, PROJECT_ID, REPO_ID
 
 async def get_project_info():
     url = "https://api.github.com/graphql"

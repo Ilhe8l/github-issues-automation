@@ -1,12 +1,12 @@
 from langgraph.graph import StateGraph
-from agent import CallIssuesAgent
-from stateTypes import State
+from agents.agent import CallIssuesAgent
+from agents.stateTypes import State
 from langgraph.graph import END
 from langchain_core.messages import AIMessage
-from issues_tool import IssuesTool
+from agents.issues_tool import IssuesTool
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.redis.aio import AsyncRedisSaver
-from config import REDIS_URL, TTL_CONFIG
+from agents.config import REDIS_URL, TTL_CONFIG
 import logging
 logging.basicConfig(level=logging.CRITICAL)
 

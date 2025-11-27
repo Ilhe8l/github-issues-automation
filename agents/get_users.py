@@ -1,6 +1,6 @@
 import requests
 from dotenv import load_dotenv
-from config import ORG, REPO, TOKEN
+from agents.config import ORG, REPO, TOKEN
 
 async def get_users():
     url = f"https://api.github.com/repos/{ORG}/{REPO}/assignees"

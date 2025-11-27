@@ -1,10 +1,11 @@
 from langchain_core.messages import HumanMessage
-from graph import get_graph
-from stateTypes import State
+from agents.graph import get_graph
+from agents.stateTypes import State
 import asyncio
 
 async def process_message(user_message: str, thread_id: str, user_id: str) -> dict:
-    # Obtém o grafo já configurado com o Langfuse handler
+    print("[i] Chamando o agente de issues...")
+
     graph = await get_graph()
 
     # Executa o grafo com informações do usuário e da sessão
@@ -20,6 +21,7 @@ async def process_message(user_message: str, thread_id: str, user_id: str) -> di
             }
         }
     )
+    print("[*] Resposta do agente:", response)
 
     return {
         "response": response["messages"][-1].content,
@@ -28,9 +30,9 @@ async def process_message(user_message: str, thread_id: str, user_id: str) -> di
     }
 
 
-if __name__ == "__main__":
-    user_message = input("Digite sua mensagem: ")
-    thread_id = "thread"
-    user_id = "user"
-    response = asyncio.run(process_message(user_message, thread_id, user_id))
+#if __name__ == "__main__":
+#    user_message = input("Digite sua mensagem: ")
+#    thread_id = "thread"
+#    user_id = "user"
+#    response = asyncio.run(process_message(user_message, thread_id, user_id))
     #print(response)
