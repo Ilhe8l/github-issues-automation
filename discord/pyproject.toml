@@ -1,0 +1,13 @@
+[project]
+version = "0.1.0"
+name = "conn-discord"
+description = "Add your description here"
+requires-python = ">=3.13,<3.14"
+package-mode = false
+dependencies = [
+    "asyncio==4.0.0",
+    "google-generativeai==0.8.3",
+    "discord",
+    "dotenv",
+    "redis==6.2.0",
+]

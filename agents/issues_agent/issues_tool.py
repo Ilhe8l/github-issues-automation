@@ -23,7 +23,7 @@ async def IssuesTool(
     sprint_field_id: str,
     quarter_field_id: str,
     start_date_field_id: str,
-    milestone_number: int,
+    milestone_number: Optional[int] = None,
     #end_date: Optional[str] = None,
     #end_date_field_id: Optional[str] = None
 ) -> dict:
@@ -68,8 +68,12 @@ async def IssuesTool(
         "body": issue_description,
         "assignees": assignees,
         "labels": labels,
-        "milestone": milestone_number
+      
     }
+
+    if milestone_number:
+        issue_data["milestone"] = milestone_number
+    
     
     res_issue = requests.post(url_issue, headers=headers, json=issue_data)
     

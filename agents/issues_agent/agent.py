@@ -15,8 +15,8 @@ from langchain_core.messages import (
 )
 import os
 from dotenv import load_dotenv
-from issues_tool import IssuesTool
-from build_prompt import build_prompt
+from issues_agent.issues_tool import IssuesTool
+from issues_agent.build_prompt import build_prompt
 
 load_dotenv()
 

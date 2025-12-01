@@ -1,6 +1,6 @@
 from config import SYSTEM_PROMPT, ISSUE_TASK_TEMPLATE, ISSUE_BUG_TEMPLATE, ISSUE_FEATURE_TEMPLATE
-from get_users import get_users
-from get_fields import get_project_info
+from issues_agent.get_users import get_users
+from issues_agent.get_fields import get_project_info
 import time
 
 async def build_prompt() -> str:

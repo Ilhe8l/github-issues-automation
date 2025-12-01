@@ -1,9 +1,9 @@
 from langgraph.graph import StateGraph
-from agent import CallIssuesAgent
+from issues_agent.agent import CallIssuesAgent
 from stateTypes import State
 from langgraph.graph import END
 from langchain_core.messages import AIMessage
-from issues_tool import IssuesTool
+from issues_agent.issues_tool import IssuesTool
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.redis.aio import AsyncRedisSaver
 from config import REDIS_URL, TTL_CONFIG
@@ -39,6 +39,7 @@ async def get_graph():
     
     # Cria uma vez só
     if _checkpointer is None:
+        print("[i] Inicializando o checkpointer Redis...")
         async with AsyncRedisSaver.from_conn_string(REDIS_URL, ttl=TTL_CONFIG) as _checkpointer:
             await _checkpointer.asetup()
 

@@ -1,14 +1,10 @@
 import google.generativeai as genai
 from config import GEMINI_API_KEY
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Configurar a API Key
 genai.configure(api_key=GEMINI_API_KEY)
-
-def transcribe_audio_with_speakers(audio_path, language="português", include_timestamps=True, output_format="texto"):
+    
+async def transcribe_audio_with_speakers(audio_path, language="português", include_timestamps=True, output_format="texto"):
     if not os.path.exists(audio_path):
         raise FileNotFoundError(f"Arquivo não encontrado: {audio_path}")
     
@@ -56,19 +52,3 @@ Se conseguir identificar nomes pelo contexto da conversa, use os nomes reais.
         print(f"Aviso: Não foi possível deletar o arquivo: {e}")
     
     return response.text
-
-    # Substitua pelo caminho do seu arquivo de áudio
-    audio_path = "audio.mp3"
-    
-    try:
-        # Transcrição com identificação de falantes
-        transcription = transcribe_audio_with_speakers(
-            audio_path, 
-            language="português",
-            include_timestamps=True,
-            output_format="texto"  # Use "json" para saída estruturada
-        )
-        print(transcription)
-        
-    except Exception as e:
-        print(f"Erro ao transcrever: {e}")
