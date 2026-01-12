@@ -1,0 +1,29 @@
+services:
+  agents:
+    build:
+      context: ./agents
+      dockerfile: Dockerfile
+    container_name: agents_service
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    networks:
+      - agentes-network
+    environment:
+      PYTHONUNBUFFERED: 1
+      
+  discord-bot:
+    build:
+      context: ./discord
+      dockerfile: Dockerfile
+    container_name: discord_bot_service
+    env_file:
+      - .env
+    networks:
+      - agentes-network
+    environment:
+      PYTHONUNBUFFERED: 1
+networks:
+  agentes-network:
+    external: true

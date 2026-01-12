@@ -1,0 +1,20 @@
+[project]
+version = "0.1.0"
+name = "issue-agent"
+description = "Add your description here"
+requires-python = ">=3.13,<3.14"
+package-mode = false
+dependencies = [
+    "asyncio==4.0.0",
+    "langchain==0.3.10",
+    "langchain-community==0.3.10",
+    "langchain-core==0.3.28",
+    "langchain-openai==0.2.14",
+    "langchain-google-genai==2.0.5",
+    "langchain-redis==0.2.3",
+    "langgraph==0.2.60",
+    "langgraph-checkpoint-redis==0.0.8",
+    "google-generativeai==0.8.3",
+    "streamlit==1.51.0",
+    "redis==6.2.0",
+]
