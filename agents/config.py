@@ -10,10 +10,6 @@ MAX_CHAT_HISTORY_TOKENS: int = int(os.getenv("MAX_CHAT_HISTORY_TOKENS", "1000000
 
 # GitHub config
 TOKEN: str = os.getenv("GITHUB_TOKEN", "")
-ORG: str = os.getenv("GITHUB_ORG", "ilhe8l")
-REPO: str = os.getenv("GITHUB_REPO", "teste_issues")
-PROJECT_ID: str = os.getenv("GITHUB_PROJECT_ID", "")  
-REPO_ID: str = os.getenv("GITHUB_REPO_ID", "")
 
 # Redis config
 REDIS_URL: str = os.getenv("REDIS_URL", "redis://redis:6379")
