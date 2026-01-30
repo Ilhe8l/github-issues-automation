@@ -8,7 +8,9 @@ async def get_project_info():
         "Authorization": f"Bearer {TOKEN}",
         "Content-Type": "application/json"
     }
-    
+    # todo:
+    # falta o type da issue lá do github 
+    # erro ao cadastrar quarter "The iteration Id does not belong to the field"
     query = """
     query GetProjectFullInfo($projectId: ID!, $repoId: ID!) {
       project: node(id: $projectId) {
@@ -138,7 +140,7 @@ async def get_project_info():
             "state": milestone["state"],
             "number": milestone["number"]
         })
-    
+    print(result)
     return result
 
 

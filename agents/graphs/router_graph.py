@@ -20,6 +20,7 @@ async def run_subgraph(state: State, checkpointer):
         graph = await get_issues_graph(checkpointer)
 
     else:
+        print(f"[x] comando desconhecido: {command}")       
         raise ValueError(f"comando desconhecido: {command}")
 
     return await graph.ainvoke(state)

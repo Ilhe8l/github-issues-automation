@@ -1,19 +1,45 @@
 from config import ISSUES_AGENT_SYSTEM_PROMPT, ISSUE_TASK_TEMPLATE, ISSUE_BUG_TEMPLATE, ISSUE_FEATURE_TEMPLATE
-from issues_agent.get_users import get_users
+from services.squad import get_squad_info
 from issues_agent.get_fields import get_project_info
-import time
+import time, json
 
-async def build_prompt() -> str:
+async def build_prompt(squad_id: str) -> str:
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    users = await get_users()
-    users_str = ", ".join(users)
-    project_info = await get_project_info()
-    prompt = ISSUES_AGENT_SYSTEM_PROMPT + f"""\n\nUsers available to assign issues: 
-    {users_str}\n\nTemplates available:\nTASK TEMPLATE: {ISSUE_TASK_TEMPLATE}\nBUG TEMPLATE: {ISSUE_BUG_TEMPLATE}\nFEATURE TEMPLATE: 
-    {ISSUE_FEATURE_TEMPLATE}\n\nProject fields and options:\n{project_info}\n\nCurrent date and time: {now}. Use this to set due dates or start dates if needed."""
-    print ("[*] prompt construído.")
-    return prompt
+    
+    # busca os dados 
+    squad_data = await get_squad_info(squad_id)
+    project_data = await get_project_info()
 
+    # identa e converte para string JSON
+    squad_str = json.dumps(squad_data, indent=2, ensure_ascii=False)
+    project_str = json.dumps(project_data, indent=2, ensure_ascii=False)
+
+    prompt = f"""{ISSUES_AGENT_SYSTEM_PROMPT}
+
+    **CONTEXT & METADATA**
+    [1] CURRENT DATE/TIME: 
+        {now}
+
+    [2] SQUAD INFORMATION:
+        {squad_str}
+
+    [3] PROJECT FIELDS MAPPING (Use these IDs for the JSON fields):
+        {project_str}
+
+    [4] **ISSUE BODY TEMPLATES (Markdown)**
+    --- TASK TEMPLATE ---
+        {ISSUE_TASK_TEMPLATE}
+
+    --- BUG TEMPLATE ---
+        {ISSUE_BUG_TEMPLATE}
+
+    --- FEATURE TEMPLATE ---
+        {ISSUE_FEATURE_TEMPLATE}
+    """
+
+    print("[*] Prompt construído.")
+    print(prompt)
+    return prompt
 #if __name__ == "__main__":
 #    import asyncio
 #    prompt = asyncio.run(build_prompt())

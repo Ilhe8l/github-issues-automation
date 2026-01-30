@@ -2,14 +2,10 @@ import discord
 from discord.ext import commands
 import os
 import io
-from dotenv import load_dotenv
-from config import TOKEN, CANAL_ID
+from config import TOKEN, CANAL_ID, GUILD_ID
 from redis_queue import push_to_queue
 from message_handler import handle_message_by_type
-
-load_dotenv()
-
-GUILD_ID = int(os.getenv("GUILD_ID"))
+from commands.command_router import get_last_command
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -24,12 +20,11 @@ from commands.generate_issues import setup as setup_issues
 
 @bot.event
 async def on_ready():
-    print(f"[*] bot logado como {bot.user}")
-
-    await setup_planning(bot, GUILD_ID) 
-    await setup_issues(bot, GUILD_ID)
-
     try:
+        print(f"[*] bot logado como {bot.user}")
+
+        await setup_planning(bot, GUILD_ID) 
+        await setup_issues(bot, GUILD_ID)
         guild = discord.Object(id=GUILD_ID)
         synced = await bot.tree.sync(guild=guild)
         print(f"[*] slash commands sincronizados na guild: {len(synced)}")
@@ -58,18 +53,24 @@ async def on_message(message):
             "Desculpe, aceito apenas mensagens de texto ou arquivos .txt e .md"
         )
         return
+    
+    
+    last_command = await get_last_command(message.author.id)
+    print(f"[i] último comando do usuário {message.author.id}: {last_command}")
 
     payload = {
-        "author_id": message.author.id,
-        "author_name": str(message.author),
+        "user_id": message.author.id,
+        "user_name": str(message.author),
         "channel_id": message.channel.id,
         "content": result,
         "message_id": message.id,
+        "command": last_command or "main_agent",
+        "type": "mention",
     }
 
     await push_to_queue("discord_messages", payload)
 
-async def send_text_message(channel_id: int, content: str):
+async def send_text_message(channel_id: int, intro_message: str, generated_content: str, closing_message: str):
     print(f"[i] enviando mensagem para o canal {channel_id}")
 
     channel = bot.get_channel(channel_id)
@@ -77,20 +78,30 @@ async def send_text_message(channel_id: int, content: str):
         print(f"[x] canal {channel_id} não encontrado")
         return
 
-    # mensagem pequena
-    if len(content) <= 2000:
-        await channel.send(content)
-        return
+    # envia intro, conteúdo gerado (como arquivo) e mensagem de fechamento
+    # se intro for maior que 2000 caracteres, evia como md
 
-    # mensagem grande - arquivo .md
-    print("[i] mensagem muito longa, enviando como arquivo")
-    buffer = io.BytesIO(content.encode("utf-8"))
-    file = discord.File(fp=buffer, filename="resposta.md")
+    # intro
+    if intro_message:
+        if len(intro_message) > 2000:
+            file = discord.File(io.StringIO(intro_message), filename="intro_message.md")
+            await channel.send(file=file)
+        else:
+            await channel.send(intro_message)
 
-    await channel.send(
-        content="resposta muito longa, enviada como arquivo:",
-        file=file
-    )
+    # conteúdo principal
+    if generated_content:
+        file = discord.File(io.StringIO(generated_content), filename="generated_content.md")
+        await channel.send(file=file)
+
+    # fechamento
+    if closing_message:
+        if len(closing_message) > 2000:
+            file = discord.File(io.StringIO(closing_message), filename="closing_message.md")
+            await channel.send(file=file)
+        else:
+            await channel.send(closing_message)
+
 
 async def run_bot():
     await bot.start(TOKEN)

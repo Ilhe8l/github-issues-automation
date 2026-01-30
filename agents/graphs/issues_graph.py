@@ -4,10 +4,13 @@ from langgraph.prebuilt import ToolNode
 
 from stateTypes import State
 from issues_agent.agent import CallIssuesAgent
-from issues_agent.issues_tool import IssuesTool
+from issues_agent.issues_tool import close_issue_tool, create_issue_tool, edit_issue_tool, list_issues_tool, read_issues_tool
 
-tools = [IssuesTool]
-tools_node = ToolNode(tools=tools)
+tools = [close_issue_tool, create_issue_tool, edit_issue_tool, list_issues_tool, read_issues_tool]
+
+# nó de tools
+# é preciso dizer qual a chave das mensagens no state (por padrão é "messages") :/
+tools_node = ToolNode(tools=tools, messages_key="issues_messages") 
 
 
 # decide se o agent chamou alguma tool

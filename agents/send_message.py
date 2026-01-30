@@ -7,7 +7,9 @@ async def process_message(
     user_message: str,
     thread_id: str,
     user_id: str,
+    squad_id: Optional[str] = None,
     command: Optional[str] = None
+
 ) -> dict:
 
     checkpointer = await get_checkpointer()
@@ -20,11 +22,13 @@ async def process_message(
             target: [HumanMessage(content=user_message)],
             "last_user_message": user_message,
             "command": command,  
+            "squad_id": squad_id,
         },
         config={
             "configurable": {
                 "thread_id": thread_id,
                 "user_id": user_id,
+                
             }
         }
     )
@@ -42,4 +46,6 @@ async def target_messages(command: Optional[str]) -> str:
         target = "planning_messages"
     elif command == "generate_issues":
         target = "issues_messages"
+
+    print(f"[i] usando target_messages: {target}")
     return target

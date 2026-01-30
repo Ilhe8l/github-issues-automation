@@ -2,16 +2,23 @@
 from config import MAX_CHAT_HISTORY_TOKENS
 from stateTypes import State
 from langchain_core.messages import trim_messages, SystemMessage
+from planning_agent.github_tool import save_file_to_github_tool
 from llm_factory import create_llm
 from planning_agent.build_prompt import build_prompt
 
 # inicializa o agente usando llm factory
 agent = create_llm(temperature=0.3)
+agent_with_tools = agent.bind_tools([save_file_to_github_tool])
 
 async def CallPlanningAgent(state: State) -> State:
-    if not isinstance(state["planning_messages"][0], SystemMessage):
-        system_prompt = await build_prompt()
-        state["planning_messages"].insert(0, SystemMessage(content=system_prompt))
+    try:
+        if state.get("planning_system_prompt_added") is not True:
+            squad_id = state.get("squad_id", "default")
+            system_prompt = await build_prompt(squad_id)
+            state["planning_messages"].insert(0, SystemMessage(content=system_prompt))
+            state["planning_system_prompt_added"] = True
+    except Exception as e:
+        print(f"[x] erro ao adicionar prompt do sistema: {e}")
     
     # prepara mensagens
     messages = state["planning_messages"]
@@ -27,7 +34,7 @@ async def CallPlanningAgent(state: State) -> State:
     )
 
     # chama o agente
-    response = await agent.ainvoke(messages)
+    response = await agent_with_tools.ainvoke(messages)
     
     # atualiza o estado
     state["planning_messages"].append(response)

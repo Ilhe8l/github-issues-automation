@@ -20,10 +20,19 @@ async def consume_responses():
             data = json.loads(raw_data) 
 
             message = data.get("response")
+            message_data = json.loads(message)  # decodifica o JSON da resposta gerada
             channel_id = data.get("channel_id")
             print(f"[i] enviando mensagem para o canal {channel_id}: {message}")
-            await send_text_message(channel_id, message)
-
+            intro_message = message_data.get("intro_message", "")
+            try: 
+                generated_content = message_data.get("generated_content", "")
+            except Exception as e:
+                print(f"conteúdo não gerado para essa mensagem: {e}")
+                generated_content = ""
+                pass
+            closing_message = message_data.get("closing_message", "")
+            await send_text_message(channel_id, intro_message, generated_content, closing_message)
+            
         except Exception as e:
             print(f"[x] erro no consumer: {e}")
             await asyncio.sleep(2)

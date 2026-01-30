@@ -1,0 +1,139 @@
+{
+  "teams": [
+    {
+      "id": "plataforma",
+      "display_name": "Time de Plataforma",
+      "description": "Responsável pela infraestrutura, CI/CD, DevOps e ferramentas internas de produtividade.",
+      "tech_lead": "João Marcos",
+      "mentors": ["Rafael Emerick"],
+      "members": [
+        {
+          "name": "Rafael Emerick",
+          "github_user": "rafaelrezo",
+          "role": "Coordenador do Time"
+        },
+        {
+          "name": "João Marcos",
+          "github_user": "joaomrpimentel",
+          "role": "Líder do Time | Desenvolvedor"
+        },
+        {
+          "name": "Matheus Garcias",
+          "github_user": "0xdeadbad",
+          "role": "Desenvolvedor"
+        },
+        {
+          "name": "André Coelho",
+          "github_user": "AndreCoelhoS",
+          "role": "Desenvolvedor"
+        },
+        {
+          "name": "Luan Otoni",
+          "github_user": "luanotini",
+          "role": "Desenvolvedor | Atualmente liderando o servicedesk, que é composto por Lucas Bruno e Lucas Santos."
+        },
+        {
+          "name": "Lucas Bruno",
+          "github_user": "lucasbruno-devdog",
+          "role": "Desenvolvedor"
+        },
+        {
+          "name": "Lucas Santos",
+          "github_user": "LuzKS",
+          "role": "Desenvolvedor"
+        },
+        {
+          "name": "Luiz Rojas",
+          "github_user": "LuizRojas",
+          "role": "Desenvolvedor | Atualmente trabalhando solo no Workstage."
+        },
+        {
+          "name": "Arthur Cremasco",
+          "github_user": "ArthurCremasco",
+          "role": "Desenvolvedor | Atualmente liderando Artur Pedro e Luiz Henrique."
+        },
+        {
+          "name": "Artur Pedro",
+          "github_user": "artcarvalho",
+          "role": "Desenvolvedor"
+        },
+        {
+          "name": "Luiz Henrique",
+          "github_user": " LuizHenriqueOlv",
+          "role": "Desenvolvedor"
+        }
+      ],
+      "resources": {
+        "github_project": "https://github.com/orgs/leds-conectafapes/projects/31",
+        "github_issues_repo": "https://github.com/leds-conectafapes/devops-project",
+        "github_planning_repo": "https://github.com/leds-conectafapes/devops-planning"
+      },
+      "stack": [
+        { "name": "Terraform", "version": "1.6" },
+        { "name": "Kubernetes", "version": "1.28" },
+        { "name": "Docker", "version": "24.0" },
+        { "name": "Workstage", "version": "0.38" }
+      ]
+    },
+    {
+      "id": "ia",
+      "display_name": "Time de Inteligência Artificial",
+      "description": "Responsável pelo desenvolvimento de modelos de IA, pipelines de dados, LLMs e soluções baseadas em machine learning.",
+      "tech_lead": "Tadeu Augusto",
+      "mentors": ["Daniel Cavalieri", "Luis Felippe"],
+      "members": [
+        {
+          "name": "Daniel Cavalieri",
+          "github_user": "danielcavalieri", 
+          "role": "Coordenador do Time"
+        },
+        {
+          "name": "Luis Felippe",
+          "github_user": "luisfelippe",
+          "role": "Consultor Técnico"
+        },
+        {
+          "name": "Tadeu Augusto",
+          "github_user": "tadeuaugustovs",
+          "role": "Líder do Time | Desenvolvedor"
+        },
+        {
+          "name": "Guilherme Souza",
+          "github_user": "ilhe8l",
+          "role": "Desenvolvedor | Trabalha no produto Edite."
+        },
+        {
+          "name": "Caio Lessa",
+          "github_user": "CaioLessaSimao",
+          "role": "Desenvolvedor | Trabalha no produto Valida."
+        },
+        {
+          "name": "Eduardo",
+          "github_user": "Eduardo2006g",
+          "role": "Desenvolvedor | Trabalha no produto Oráculo."
+        },
+        {
+          "name": "Gabriel Brunetti",
+          "github_user": "gabrieldpbrunetti | Trabalha no produto Edite.",
+          "role": "Desenvolvedor"
+        },
+        {
+          "name": "Erickuri",
+          "github_user": "Erickuri-sudo",
+          "role": "Desenvolvedor | Trabalha no produto Edite e Valida."
+        }
+      ],
+      "resources": {
+        "github_project": "https://github.com/orgs/leds-conectafapes/projects/26",
+        "github_issues_repo": "https://github.com/leds-conectafapes/agentes-project",
+        "github_planning_repo": "https://github.com/leds-conectafapes/agentes-planning"
+      },
+      "stack": [
+        { "name": "Python", "version": "3.11" },
+        { "name": "PyTorch", "version": "2.1" },
+        { "name": "LangChain", "version": "0.1" }
+      ]
+    }
+  
+  ]
+}
