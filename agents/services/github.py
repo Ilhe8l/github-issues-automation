@@ -91,3 +91,43 @@ async def get_project_id(squad_id: str) -> str:
         )
 
     return root["projectV2"]["id"]
+
+
+async def get_repo_id(squad_id: str, repo_type: str) -> str:
+    owner, repo = await parse_repo_url(squad_id, repo_type)
+
+    query = """
+    query($owner: String!, $name: String!) {
+      repository(owner: $owner, name: $name) {
+        id
+      }
+    }
+    """
+
+    variables = {
+        "owner": owner,
+        "name": repo
+    }
+
+    res = requests.post(
+        GRAPHQL_API,
+        headers=GRAPHQL_HEADERS,
+        json={
+            "query": query,
+            "variables": variables
+        }
+    )
+
+    res.raise_for_status()
+    data = res.json()
+
+    if "errors" in data:
+        raise Exception(f"GraphQL errors: {data['errors']}")
+
+    repository = data.get("data", {}).get("repository")
+    if not repository or not repository.get("id"):
+        raise ValueError(
+            f"Repositório não encontrado ou sem acesso ({owner}/{repo})"
+        )
+
+    return repository["id"]

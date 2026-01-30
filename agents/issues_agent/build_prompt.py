@@ -8,7 +8,7 @@ async def build_prompt(squad_id: str) -> str:
     
     # busca os dados 
     squad_data = await get_squad_info(squad_id)
-    project_data = await get_project_info()
+    project_data = await get_project_info(squad_id)
 
     # identa e converte para string JSON
     squad_str = json.dumps(squad_data, indent=2, ensure_ascii=False)

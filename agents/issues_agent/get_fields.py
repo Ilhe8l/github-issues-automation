@@ -1,13 +1,15 @@
 import requests
 import json
-from config import TOKEN, PROJECT_ID, REPO_ID
+from config import TOKEN, GRAPHQL_API, GRAPHQL_HEADERS
+from services.github import get_project_id, get_repo_id
 
-async def get_project_info():
-    url = "https://api.github.com/graphql"
-    headers = {
-        "Authorization": f"Bearer {TOKEN}",
-        "Content-Type": "application/json"
-    }
+
+
+async def get_project_info(squad_id: str) -> dict:
+    PROJECT_ID = await get_project_id(squad_id)
+    REPO_ID = await get_repo_id(squad_id, "github_issues_repo")
+    url = GRAPHQL_API
+    headers = GRAPHQL_HEADERS
     # todo:
     # falta o type da issue lá do github 
     # erro ao cadastrar quarter "The iteration Id does not belong to the field"

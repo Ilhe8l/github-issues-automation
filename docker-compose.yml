@@ -9,7 +9,7 @@ services:
     ports:
       - "8501:8501"
     networks:
-      - agentes-network
+        - network-agentes
     environment:
       PYTHONUNBUFFERED: 1
       
@@ -21,9 +21,9 @@ services:
     env_file:
       - .env
     networks:
-      - agentes-network
+      - network-agentes
     environment:
       PYTHONUNBUFFERED: 1
 networks:
-  agentes-network:
+  network-agentes:
     external: true
