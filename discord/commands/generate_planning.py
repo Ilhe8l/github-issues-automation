@@ -5,6 +5,7 @@ from discord import app_commands
 from redis_queue import push_to_queue
 from commands.command_router import set_last_command
 from commands.load_options import load_squad_options
+from typing_utils import start_typing
 
 # setup do comando
 
@@ -19,6 +20,8 @@ async def setup(bot, GUILD_ID):
     @app_commands.describe(
         squad="Squad responsável pelo planejamento",
         backlog_file="Arquivo .txt ou .md com o backlog (opcional)",
+        extra_file_1="Contexto adicional ou unir plannings",
+        extra_file_2="Contexto adicional ou unir plannings",
         message=(
             "Mensagem opcional para complementar o backlog "
             "ou enviar instruções adicionais ao bot"
@@ -29,6 +32,8 @@ async def setup(bot, GUILD_ID):
         interaction: discord.Interaction,
         squad: str,  
         backlog_file: discord.Attachment | None = None, 
+        extra_file_1: discord.Attachment | None = None,
+        extra_file_2: discord.Attachment | None = None,
         message: str | None = None,
     ):
         await interaction.response.defer(ephemeral=True)
@@ -46,6 +51,14 @@ async def setup(bot, GUILD_ID):
         if backlog_file:
             file_bytes = await backlog_file.read()
             content_parts.append(file_bytes.decode("utf-8"))
+
+        if extra_file_1:
+            file_bytes = await extra_file_1.read()
+            content_parts.append(f"\n\n[arquivo extra 1: {extra_file_1.filename}]\n" + file_bytes.decode("utf-8"))
+
+        if extra_file_2:
+            file_bytes = await extra_file_2.read()
+            content_parts.append(f"\n\n[arquivo extra 2: {extra_file_2.filename}]\n" + file_bytes.decode("utf-8"))
 
         if message:
             content_parts.append(
@@ -78,3 +91,5 @@ async def setup(bot, GUILD_ID):
             "Você receberá uma mensagem quando estiver pronto.",
             ephemeral=True,
         )
+
+        await start_typing(interaction.client, interaction.channel_id)

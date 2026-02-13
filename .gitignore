@@ -16,3 +16,4 @@ dist/
 *.log
 .DS_Store
 thumbs.db
+**/.squads.json

@@ -3,6 +3,7 @@ from discord import app_commands
 from redis_queue import push_to_queue
 from commands.command_router import set_last_command
 from commands.load_options import load_squad_options
+from typing_utils import start_typing
 
 async def setup(bot, GUILD_ID):
     squad_choices = await load_squad_options()
@@ -15,6 +16,7 @@ async def setup(bot, GUILD_ID):
     @app_commands.describe(
         squad="Squad responsável pelo planejamento",
         planning_file="Arquivo .txt ou .md com o planning (opcional)",
+        extra_file="Arquivo extra para contexto adicional (opcional)",
         message=(
             "Mensagem opcional para complementar o planning "
             "ou enviar instruções adicionais ao bot"
@@ -25,6 +27,7 @@ async def setup(bot, GUILD_ID):
         interaction: discord.Interaction, 
         squad: str,
         planning_file: discord.Attachment | None = None,
+        extra_file: discord.Attachment | None = None,
         message: str | None = None
     ):
         await interaction.response.defer(ephemeral=True)
@@ -42,6 +45,10 @@ async def setup(bot, GUILD_ID):
         if planning_file:
             file_bytes = await planning_file.read()
             content_parts.append(file_bytes.decode("utf-8"))
+
+        if extra_file:
+            file_bytes = await extra_file.read()
+            content_parts.append(f"\n\n[arquivo extra: {extra_file.filename}]\n" + file_bytes.decode("utf-8"))
 
         if message:
             content_parts.append(
@@ -72,6 +79,8 @@ async def setup(bot, GUILD_ID):
         await push_to_queue("discord_messages", payload)
 
         await interaction.followup.send(
-            "Informações enviadas para geração de issues. "
+            f"Solicitação de issues enviada para o squad **{squad}**. "
             "Você receberá uma mensagem quando estiver pronto."
         )
+        
+        await start_typing(interaction.client, interaction.channel_id)

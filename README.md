@@ -1,100 +1,94 @@
-# Automatização de Criação de Issues com IA
+# GitHub Issues Automation Bot
 
-Este projeto utiliza inteligência artificial para automatizar a criação de issues no GitHub com base em mensagens de usuários. Através de um agente configurado, o sistema interpreta as solicitações dos usuários e gera issues detalhadas, facilitando o gerenciamento de tarefas e problemas em repositórios GitHub.
+Este projeto consiste em um bot de Discord integrado a agentes de IA para automatizar o gerenciamento de tarefas e projetos no GitHub. Ele permite criar issues e gerar planejamentos de sprint diretamente pelo chat do Discord.
 
 ## Funcionalidades
-- Interpretação de mensagens de usuários para identificar problemas ou solicitações.
-- Geração automática de issues no GitHub com título, descrição, assignees e labels.
-- Utilização de Redis para armazenamento temporário do histórico de mensagens e gerenciamento de estado.
-- Frontend simples com Streamlit para interação com o agente.
-- Geração de issues por meio de texto ou áudio.
 
-## Docker
-O projeto foi dockerizado. Exemplo de uso:
+- **Planning Agent (`/planning_agent`)**: Transforma backlogs brutos ou anotações em documentos de planejamento de sprint estruturados.
+  - Suporta múltiplos arquivos de entrada para unir contextos.
+  - Gera arquivos Markdown persistidos diretamente no GitHub.
+- **Issues Agent (`/issues_agent`)**: Converte itens de planejamento em issues do GitHub.
+  - Cria tasks, features e bugs com templates padronizados.
+  - Associa issues a projetos e squads automaticamente.
+- **Comandos Utilitários**:
+  - `/ping`: Verifica a latência e saúde do bot.
+- **Feedback Visual**: Indicador de "Digitando..." persistente e mensagens de confirmação claras.
 
-- Build:
-  ```
-  docker compose build
-  ```
+## Configuração e Instalação
 
-- Up:
-  ```
-  docker compose up -d
-  ```
+### 1. Pré-requisitos
+- Docker e Docker Compose instalados.
+- Token do Discord (Bot).
+- Token do GitHub (Personal Access Token).
+- Chave de API de LLM (OpenAI, Gemini, etc.).
 
-- Frontend:
-  Acesse `http://localhost:8501` para interagir com o agente via interface web.
+### 2. Variáveis de Ambiente
+Crie um arquivo `.env` na raiz do projeto copiando o exemplo:
+```bash
+cp .env.example .env
+```
+Preencha as variáveis conforme `discord/config.py` e `agents/config.py`:
+- `DISCORD_TOKEN`: Token do seu bot no Developer Portal.
+- `GUILD_ID`: ID do servidor Discord onde os comandos serão registrados.
+- `GITHUB_TOKEN`: Token com permissões de repo e project.
+- `LLM_API_KEY`, `LLM_MODEL`, `LLM_PROVIDER`: Configurações da IA.
 
-## Configuração
+### 3. Configuração de Squads
+O bot gerencia múltiplos times (squads) através de configurações no Redis.
 
-1. **Variáveis de Ambiente**: Configure as seguintes variáveis de ambiente no arquivo `.env`:
-   - `LLM_API_KEY`: Chave de API para o modelo de linguagem.
-   - `LLM_PROVIDER`: Provedor do modelo de linguagem (ex: `gemini`).
-   - `LLM_MODEL`: Modelo do provedor de linguagem (ex: `gpt-4.1`).
-   - `GEMINI_API_KEY`: Chave de API para o modelo Gemini (para transcrição do áudio).
-   - `GITHUB_TOKEN`: Token de autenticação do GitHub.
-   - `GITHUB_REPO_ID`: ID do repositório GitHub onde as issues serão criadas.
-   - `GITHUB_PROJECT_ID`: ID do projeto GitHub para associar as issues.
-   - `GITHUB_ORG`: Nome da organização ou usuário do GitHub.
-   - `GITHUB_REPO`: Nome do repositório GitHub.
-   - `REDIS_URL`: URL de conexão com o Redis (padrão: `redis://localhost:6379`).
-   - Outras variáveis específicas podem ser definidas em `agent/config.py`.
+1.  Edite o arquivo `squads.json` com os dados dos seus times. **Use este formato:**
 
-2. **Configurações do Redis**: Ajuste o tempo de vida (TTL) das entradas no Redis conforme necessário, utilizando a variável `TTL_TIME`.
-
-## Estrutura do Código
-- `agent/config.py`: Configurações do agente, incluindo o prompt para criação de issues.
-- `agents/issues_tool.py`: Ferramenta que cria a issue no repositório e atualiza campos do Project via GraphQL.
-- `agent/graph.py`: Definição do grafo de estados e roteamento do agente.
-- `agent/send_message.py`: Script para enviar mensagens de usuários e processar as respostas.
-- `agents/streamlit.py`: Frontend simples com Streamlit para interação com o agente via texto ou áudio.
-
-## Formato da Issue (conforme `agents/issues_tool.py`)
-
-A criação da issue usa a API REST do GitHub e depois adiciona o item ao Project via GraphQL, atualizando vários campos customizados. Campos enviados na criação e atualização:
-
-- Campos básicos (REST / issues API):
-  - title (issue_name): título da issue
-  - body (issue_description): descrição/corpo da issue
-  - assignees: lista de usernames (ex: ["user1", "user2"])
-  - labels: lista de labels (ex: ["bug", "enhancement"])
-  - milestone: número da milestone (ex: 1)
-
-- Campos do Project (GraphQL — exigem IDs de campo e valores):
-  - status_field_id / status_id -> {"singleSelectOptionId": status_id}
-  - squad_field_id / squad_id -> {"singleSelectOptionId": squad_id}
-  - priority_field_id / priority_id -> {"singleSelectOptionId": priority_id}
-  - product_field_id / product_id -> {"singleSelectOptionId": product_id}
-  - sprint_field_id / sprint_id -> {"iterationId": sprint_id}
-  - quarter_field_id / quarter_id -> {"iterationId": quarter_id}
-  - start_date_field_id / start_date -> {"date": "YYYY-MM-DD"} (ISO 8601)
-
-Exemplo do payload usado pela tool para criar a issue (REST):
 ```json
 {
-  "title": "issue_name",
-  "body": "issue_description",
-  "assignees": ["user1", "user2"],
-  "labels": ["bug"],
-  "milestone": 1
+  "teams": [
+    {
+      "id": "nome-do-time",
+      "display_name": "Nome Bonito do Time",
+      "description": "Descrição do que o time faz.",
+      "tech_lead": "Nome do Tech Lead",
+      "mentors": ["Mentor 1", "Mentor 2"],
+      "members": [
+        {
+          "name": "Nome do Dev",
+          "github_user": "user-github",
+          "role": "Desenvolvedor"
+        }
+      ],
+      "resources": {
+        "github_project": "https://github.com/orgs/ORG/projects/1",
+        "github_issues_repo": "https://github.com/ORG/REPO-ISSUES",
+        "github_planning_repo": "https://github.com/ORG/REPO-PLANNING"
+      },
+      "stack": [
+        { "name": "Python", "version": "3.11" }
+      ]
+    }
+  ]
 }
 ```
 
-Depois de criar a issue, o código adiciona o conteúdo ao Project com:
-- mutation AddIssueToProject(projectId, contentId)
+2.  Carregue os dados para o Redis executando o script (necessário rodar sempre que alterar o `squads.json`):
 
-E atualiza os campos do item com a mutation BatchUpdateFields passando os IDs de campo e os valores conforme mostrado acima.
+```bash
+# Se rodando localmente com python:
+pip install redis
+python update_redis.py
+```
 
-## Como Usar
-1. Construa e rode o container 
-2. Acesse o frontend via navegador em `http://localhost:8501`
-3. Envie uma mensagem de texto ou áudio descrevendo o problema ou solicitação.
-4. O agente processará a mensagem e criará uma issue no GitHub conforme necessário.
-5. Verifique o repositório GitHub para ver a issue criada.
+### 4. Executando o Projeto
 
-## Requisitos
-- Python 3.11 ou superior
-- Bibliotecas necessárias (LangChain, Redis, requests, etc.)
+O projeto é totalmente conteinerizado. Para iniciar:
 
-## Contribuição
-- Sinta-se à vontade para abrir issues e enviar pull requests para melhorias.
+```bash
+docker compose up --build
+```
+Isso subirá os serviços:
+- `redis`: Banco de dados em memória.
+- `discord_bot_service`: Interface do bot Discord.
+- `agents_service`: Cérebro da IA que processa as filas.
+
+## Como Contribuir
+1. Faça um fork do projeto.
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`).
+3. Commit suas mudanças.
+4. Abra um Pull Request.

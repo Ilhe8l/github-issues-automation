@@ -2,6 +2,7 @@ import asyncio
 import json
 import redis.asyncio as redis
 from discord_bot import send_text_message
+from typing_utils import stop_typing
 from config import REDIS_URL
 
 redis_client = None
@@ -22,6 +23,10 @@ async def consume_responses():
             message = data.get("response")
             message_data = json.loads(message)  # decodifica o JSON da resposta gerada
             channel_id = data.get("channel_id")
+            
+            # para o typing
+            await stop_typing(channel_id)
+
             print(f"[i] enviando mensagem para o canal {channel_id}: {message}")
             intro_message = message_data.get("intro_message", "")
             try: 

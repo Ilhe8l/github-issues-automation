@@ -6,5 +6,4 @@ RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-root
 COPY . /app/
 EXPOSE 8501
-#CMD ["streamlit", "run", "streamlit.py", "--server.port=8501", "--server.address=0.0.0.0"]
 CMD ["python", "main.py"]

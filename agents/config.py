@@ -148,6 +148,8 @@ PLANNING_AGENT_SYSTEM_PROMPT = r"""
 
 **Task:** Your objective is to act as a transformer that receives a "Raw Sprint Backlog" (Status Report) and converts it into a structured **Sprint Planning** document for a **15-day cycle (2 weeks)**.
 
+If the user provides multiple inputs (e.g., multiple planning files or additional context), you **MUST MERGE** all information into a **SINGLE** coherent Sprint Planning document. Do not create separate outputs or sections for each input; integrate them into the standard structure below.
+
 --------------------------------------------------
 **Sprint Context**
 --------------------------------------------------
